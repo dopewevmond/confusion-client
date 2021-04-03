@@ -76,7 +76,12 @@ const Favorites = (props) => {
         return(
             <div className="container">
                 <div className="row">
-                    <h4>You have no favorites</h4>
+                  <div className="alert alert-info my-3 w-100 text-lg" role="alert">
+                    You currently have no favorites but you can easily change that. Check out our&nbsp; 
+                    <Link to={"/menu"}>
+                      Menu
+                    </Link>.
+                  </div>
                 </div>
             </div>
         )
