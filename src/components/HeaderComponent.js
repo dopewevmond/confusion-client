@@ -63,57 +63,61 @@ class Header extends Component {
             <NavbarToggler onClick={this.toggleNav} />
 
             <Collapse isOpen={this.state.isNavOpen} navbar>
-                <Nav navbar>
-                  <NavItem>
-                    <NavLink className="nav-link" to="/home" onClick={this.toggleNav}>
-                      Home
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink className="nav-link" to="/aboutus" onClick={this.toggleNav}>
-                      About Us
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink className="nav-link" to="/menu" onClick={this.toggleNav}>
-                      Menu
-                    </NavLink>
-                  </NavItem>
+              <Nav navbar className="ml-md-4">
+                <NavItem>
+                  <NavLink className="nav-link" to="/home" onClick={this.toggleNav}>
+                    Home
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink className="nav-link" to="/aboutus" onClick={this.toggleNav}>
+                    About Us
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink className="nav-link" to="/menu" onClick={this.toggleNav}>
+                    Menu
+                  </NavLink>
+                </NavItem>
+                {
+                  this.props.auth.isAuthenticated ?
                   <NavItem>
                     <NavLink className="nav-link" to="/favorites" onClick={this.toggleNav}>
                       My Favorites
                     </NavLink>
                   </NavItem>
-                  <NavItem>
-                    <NavLink className="nav-link" to="/contactus" onClick={this.toggleNav}>
-                      Contact Us
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <Nav className="ml-auto" navbar>
-                  <NavItem>
-                    { !this.props.auth.isAuthenticated ?
-                      <button className="btn bg-info text-white" onClick={this.toggleLoginModal}>
-                        Login
-                        {this.props.auth.isFetching ?
-                          <span className="fa fa-spinner fa-pulse fa-fw"></span>
-                          : null
-                        }
-                      </button>
-                      :
-                      <div>
-                      <div className="navbar-text mr-3">{this.props.auth.user.username}</div>
-                      <button className="btn bg-danger text-white" onClick={this.toggleLogoutModal}>
-                        Logout
-                        {this.props.auth.isFetching ?
-                          <span className="fa fa-spinner fa-pulse fa-fw"></span>
-                          : null
-                        }
-                      </button>
-                      </div>
-                    }
-                  </NavItem>
-                </Nav>
+                  : null
+                }
+                <NavItem>
+                  <NavLink className="nav-link" to="/contactus" onClick={this.toggleNav}>
+                    Contact Us
+                  </NavLink>
+                </NavItem>
+              </Nav>
+              <Nav className="ml-auto" navbar>
+                <NavItem>
+                  { !this.props.auth.isAuthenticated ?
+                    <button className="btn bg-primary text-white" onClick={this.toggleLoginModal}>
+                      Login
+                      {this.props.auth.isFetching ?
+                        <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                        : null
+                      }
+                    </button>
+                    :
+                    <div>
+                    <div className="navbar-text mr-3">{this.props.auth.user.username}</div>
+                    <button className="btn bg-danger text-white" onClick={this.toggleLogoutModal}>
+                      Logout
+                      {this.props.auth.isFetching ?
+                        <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                        : null
+                      }
+                    </button>
+                    </div>
+                  }
+                </NavItem>
+              </Nav>
             </Collapse>
           </div>
         </Navbar>
@@ -134,7 +138,7 @@ class Header extends Component {
               <FormGroup>
                 <Label htmlFor="username">Username</Label>
                 <Input type="text" id="username" name="username"
-                    innerRef={(input) => this.username = input} />
+                  innerRef={(input) => this.username = input} />
               </FormGroup>
               <FormGroup>
                 <Label htmlFor="password">Password</Label>
