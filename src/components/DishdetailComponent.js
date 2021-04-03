@@ -43,7 +43,7 @@ function RenderComments({comments, postComment, dishId, authenticated}) {
         <ul className="list-unstyled">
           {comments.map((comment) => {
             return (
-              <li>
+              <li key={comment._id}>
               <p>{comment.comment}</p>
               <p>{comment.rating} stars</p>
               <p>-- {comment.author.firstname} {comment.author.lastname} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(comment.updatedAt)))}</p>
@@ -90,7 +90,7 @@ class CommentForm extends Component {
     <div>
       {
         this.props.authenticated ?
-        <btn className="btn btn-primary" onClick={this.toggleModal}> Add Comment</btn>
+        <button className="btn btn-primary" onClick={this.toggleModal}> Add Comment</button>
         : <div>
           Please log in to add a comment
         </div>
