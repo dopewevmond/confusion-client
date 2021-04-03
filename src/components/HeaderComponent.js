@@ -10,12 +10,15 @@ class Header extends Component {
         super(props);
         this.state = {
             isNavOpen: false,
-            isModalOpen: false
+            isLoginModalOpen: false,
+            isLogoutModalOpen: false
         };
         this.toggleNav = this.toggleNav.bind(this);
-        this.toggleModal = this.toggleModal.bind(this);
+        this.toggleLoginModal = this.toggleLoginModal.bind(this);
+        this.toggleLogoutModal = this.toggleLogoutModal.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
+        
     }
 
     toggleNav() {
@@ -24,20 +27,27 @@ class Header extends Component {
         });
     }
 
-    toggleModal() {
+    toggleLoginModal() {
         this.setState({
-            isModalOpen: !this.state.isModalOpen
+            isLoginModalOpen: !this.state.isLoginModalOpen
+        });
+    }
+
+    toggleLogoutModal() {
+        this.setState({
+            isLogoutModalOpen: !this.state.isLogoutModalOpen
         });
     }
 
     handleLogin(event) {
-        this.toggleModal();
+        this.toggleLoginModal();
         this.props.loginUser({username: this.username.value, password: this.password.value});
         event.preventDefault();
 
     }
 
     handleLogout() {
+        this.toggleLogoutModal();
         this.props.logoutUser();
     }
 
@@ -84,7 +94,7 @@ class Header extends Component {
                             <Nav className="ml-auto" navbar>
                                 <NavItem>
                                     { !this.props.auth.isAuthenticated ?
-                                        <Button outline onClick={this.toggleModal}>
+                                        <Button outline onClick={this.toggleLoginModal}>
                                             <span className="fa fa-sign-in fa-lg"></span> Login
                                             {this.props.auth.isFetching ?
                                                 <span className="fa fa-spinner fa-pulse fa-fw"></span>
@@ -94,7 +104,7 @@ class Header extends Component {
                                         :
                                         <div>
                                         <div className="navbar-text mr-3">{this.props.auth.user.username}</div>
-                                        <Button outline onClick={this.handleLogout}>
+                                        <Button outline onClick={this.toggleLogoutModal}>
                                             <span className="fa fa-sign-out fa-lg"></span> Logout
                                             {this.props.auth.isFetching ?
                                                 <span className="fa fa-spinner fa-pulse fa-fw"></span>
@@ -119,8 +129,8 @@ class Header extends Component {
                         </div>
                     </div>
                 </Jumbotron>
-                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+                <Modal isOpen={this.state.isLoginModalOpen} toggle={this.toggleLoginModal}>
+                    <ModalHeader toggle={this.toggleLoginModal}>Login</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.handleLogin}>
                             <FormGroup>
@@ -142,6 +152,15 @@ class Header extends Component {
                             </FormGroup>
                             <Button type="submit" value="submit" color="primary">Login</Button>
                         </Form>
+                    </ModalBody>
+                </Modal>
+
+                <Modal isOpen={this.state.isLogoutModalOpen} toggle={this.toggleLogoutModal}>
+                    <ModalHeader toggle={this.toggleLogoutModal}>Logout</ModalHeader>
+                    <ModalBody>
+                        <p>Are you sure you want to log out?</p>
+                        <button className="btn btn-danger" onClick={this.handleLogout}>Logout</button>
+                        <button className="btn btn-secondary ml-2" onClick={this.toggleLogoutModal}>Cancel</button>
                     </ModalBody>
                 </Modal>
             </React.Fragment>
