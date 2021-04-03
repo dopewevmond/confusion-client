@@ -6,57 +6,52 @@ import { Link } from 'react-router-dom';
 import { Control, LocalForm } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
-import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
-function RenderDish({dish, favorite, postFavorite}) {
+
+function RenderDish({dish, favorite, postFavorite, authenticated}) {
   return(
     <div className="col-12 col-md-5 m-1">
-      <FadeTransform in 
-        transformProps={{
-            exitTransform: 'scale(0.5) translateY(-50%)'
-        }}>
         <Card>
           <CardImg top src={baseUrl + dish.image} alt={dish.name} />
-          <CardImgOverlay>
-            <Button outline color="primary" onClick={() => favorite ? console.log('Already favorite') : postFavorite(dish._id)}>
-              {favorite ?
-                <span className="fa fa-heart"></span>
-                : 
-                <span className="fa fa-heart-o"></span>
-              }
-            </Button>
-          </CardImgOverlay>
+          {
+            authenticated ?
+            <CardImgOverlay>
+              <Button outline color="primary" onClick={() => favorite ? console.log('Already favorite') : postFavorite(dish._id)}>
+                {favorite ?
+                  <span className="fa fa-heart"></span>
+                  : 
+                  <span className="fa fa-heart-o"></span>
+                }
+              </Button>
+            </CardImgOverlay>
+            : null
+          }
           <CardBody>
             <CardTitle>{dish.name}</CardTitle>
             <CardText>{dish.description}</CardText>
           </CardBody>
         </Card>
-      </FadeTransform>
     </div>
   );
 }
 
-function RenderComments({comments, postComment, dishId}) {
+function RenderComments({comments, postComment, dishId, authenticated}) {
   if (comments != null)
     return(
       <div className="col-12 col-md-5 m-1">
         <h4>Comments</h4>
         <ul className="list-unstyled">
-          <Stagger in>
-            {comments.map((comment) => {
-              return (
-                <Fade in key={comment._id}>
-                  <li>
-                  <p>{comment.comment}</p>
-                  <p>{comment.rating} stars</p>
-                  <p>-- {comment.author.firstname} {comment.author.lastname} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(comment.updatedAt)))}</p>
-                  </li>
-                </Fade>
-              );
-            })}
-          </Stagger>
+          {comments.map((comment) => {
+            return (
+              <li>
+              <p>{comment.comment}</p>
+              <p>{comment.rating} stars</p>
+              <p>-- {comment.author.firstname} {comment.author.lastname} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(comment.updatedAt)))}</p>
+              </li>
+            );
+          })}
         </ul>
-        <CommentForm dishId={dishId} postComment={postComment} />
+        <CommentForm dishId={dishId} postComment={postComment} authenticated={authenticated} />
       </div>
     );
   else
@@ -93,7 +88,13 @@ class CommentForm extends Component {
   render() {
     return(
     <div>
-      <btn className="btn btn-primary" onClick={this.toggleModal}> Add Comment</btn>
+      {
+        this.props.authenticated ?
+        <btn className="btn btn-primary" onClick={this.toggleModal}> Add Comment</btn>
+        : <div>
+          Please log in to add a comment
+        </div>
+      }
       <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
         <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
         <ModalBody>
@@ -162,10 +163,10 @@ const DishDetail = (props) => {
           </div>
         </div>
         <div className="row">
-          <RenderDish dish={props.dish} favorite={props.favorite} postFavorite={props.postFavorite} />
+          <RenderDish dish={props.dish} favorite={props.favorite} postFavorite={props.postFavorite} authenticated={props.auth.isAuthenticated} />
           <RenderComments comments={props.comments}
             postComment={props.postComment}
-            dishId={props.dish._id} />
+            dishId={props.dish._id} authenticated={props.auth.isAuthenticated} />
         </div>
       </div>
     );

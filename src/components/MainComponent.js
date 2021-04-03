@@ -78,6 +78,7 @@ class Main extends Component {
           postComment={this.props.postComment}
           favorite={this.props.favorites.favorites.dishes.some((dish) => dish._id === match.params.dishId)}
           postFavorite={this.props.postFavorite}
+          auth={this.props.auth}
           />
         :
         <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish._id === match.params.dishId)[0]}
@@ -88,6 +89,7 @@ class Main extends Component {
           postComment={this.props.postComment}
           favorite={false}
           postFavorite={this.props.postFavorite}
+          auth={this.props.auth}
           />
       );
     }
