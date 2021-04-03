@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Media, Breadcrumb, BreadcrumbItem, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../shared/baseUrl';
@@ -41,7 +41,7 @@ const Favorites = (props) => {
             </div>
         )
     }
-    else if (props.favorites.favorites && props.favorites.favorites.dishes) {
+    else if (props.favorites.favorites) {
 
         const favorites = props.favorites.favorites.dishes.map((dish) => {
             return (

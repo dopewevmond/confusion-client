@@ -3,7 +3,8 @@ import React from 'react';
 export const Loading = () => {
     return(
         <div className="col-12">
-            <div className="loadingspinner mx-auto my-4"></div>
+            <span className="fa fa-spinner fa-pulse fa-3x fa-fw text-primary"></span>
+            <p>Loading . . .</p>
         </div>
     );
 };
