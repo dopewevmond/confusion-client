@@ -331,6 +331,8 @@ export const postFavorite = (dishId) => (dispatch) => {
 
 export const deleteFavorite = (dishId) => (dispatch) => {
 
+    dispatch(favoritesLoading(true));
+
     const bearer = 'Bearer ' + localStorage.getItem('token');
 
     return fetch(baseUrl + 'favorites/' + dishId, {

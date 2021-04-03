@@ -41,7 +41,8 @@ const Favorites = (props) => {
             </div>
         )
     }
-    else if (props.favorites.favorites) {
+    else if (props.favorites.favorites.dishes && props.favorites.favorites.dishes.length > 0) {
+        // console.log(props.favorites.favorites.dishes[0]._id);
 
         const favorites = props.favorites.favorites.dishes.map((dish) => {
             return (
