@@ -8,7 +8,7 @@ import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 
 
-function RenderDish({dish, favorite, postFavorite, authenticated}) {
+function RenderDish({dish, favorite, postFavorite, authenticated, deleteFavorite}) {
   return(
     <div className="col-12 col-md-5 m-1">
         <Card>
@@ -16,7 +16,7 @@ function RenderDish({dish, favorite, postFavorite, authenticated}) {
           {
             authenticated ?
             <CardImgOverlay>
-              <Button outline color="primary" onClick={() => favorite ? console.log('Already favorite') : postFavorite(dish._id)}>
+              <Button outline color="primary" size="lg" onClick={() => favorite ? deleteFavorite(dish._id) : postFavorite(dish._id)}>
                 {favorite ?
                   <span className="fa fa-heart"></span>
                   : 
@@ -35,18 +35,42 @@ function RenderDish({dish, favorite, postFavorite, authenticated}) {
   );
 }
 
-function RenderComments({comments, postComment, dishId, authenticated}) {
+function RenderComments({comments, postComment, dishId, authenticated, user}) {
+  console.log('authenticated', user);
   if (comments != null)
     return(
       <div className="col-12 col-md-5 m-1">
         <h4>Comments</h4>
         <ul className="list-unstyled">
-          {comments.map((comment) => {
+          {comments.map((comment, idx, arr) => {
+
+            let stars = [];
+            for (let i = 0; i < comment.rating; i++ ) {
+              stars.push(<span className="fa fa-star mr-1" key={i}></span>)
+            }
+
+            for (let i = 0; i < 5 - comment.rating; i++) {
+              stars.push(<span className="fa fa-star-o mr-1" key={5-i}></span>)
+            }
+            
             return (
-              <li key={comment._id}>
-              <p>{comment.comment}</p>
-              <p>{comment.rating} stars</p>
-              <p>-- {comment.author.firstname} {comment.author.lastname} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(comment.updatedAt)))}</p>
+              <li key={comment._id} className="position-relative">
+                {
+                  comment.author.username === localStorage.getItem("user") ?
+                  <span className="fa fa-trash text-danger cs-position"></span>
+                  : null
+                }
+                <div className="text-warning">{stars}</div>
+                <div>{comment.comment}</div>
+                <div className="text-secondary small-text">
+                  {comment.author.firstname} {comment.author.lastname} · {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day:'2-digit'}).format(new Date(Date.parse(comment.updatedAt)))}
+                </div>   
+
+                {
+                  idx < arr.length - 1 ?
+                  <hr />
+                  : null
+                }             
               </li>
             );
           })}
@@ -91,7 +115,7 @@ class CommentForm extends Component {
       {
         this.props.authenticated ?
         <button className="btn btn-primary" onClick={this.toggleModal}> Add Comment</button>
-        : <div>
+        : <div className="alert alert-info">
           Please log in to add a comment
         </div>
       }
@@ -103,11 +127,12 @@ class CommentForm extends Component {
               <Col>
               <Label htmlFor="rating">Rating</Label>
               <Control.select model=".rating" id="rating" className="form-control">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+                <option value="" defaultValue>-- Select a rating --</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
               </Control.select>
               </Col>
             </Row>
@@ -115,7 +140,7 @@ class CommentForm extends Component {
               <Col>
               <Label htmlFor="comment">Comment</Label>
               <Control.textarea model=".comment" id="comment"
-                          rows="6" className="form-control" />
+                rows="6" className="form-control" />
               </Col>
             </Row>
             <Button type="submit" className="bg-primary">
@@ -163,10 +188,10 @@ const DishDetail = (props) => {
           </div>
         </div>
         <div className="row">
-          <RenderDish dish={props.dish} favorite={props.favorite} postFavorite={props.postFavorite} authenticated={props.auth.isAuthenticated} />
+          <RenderDish dish={props.dish} favorite={props.favorite} postFavorite={props.postFavorite} authenticated={props.auth.isAuthenticated} deleteFavorite={props.deleteFavorite} />
           <RenderComments comments={props.comments}
             postComment={props.postComment}
-            dishId={props.dish._id} authenticated={props.auth.isAuthenticated} />
+            dishId={props.dish._id} authenticated={props.auth.isAuthenticated} user={props.auth.user} />
         </div>
       </div>
     );

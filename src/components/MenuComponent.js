@@ -55,7 +55,6 @@ import { baseUrl } from '../shared/baseUrl';
                         </Breadcrumb>
                         <div className="col-12">
                             <h3>Menu</h3>
-                            <hr />
                         </div>
                     </div>
                     <div className="row">
